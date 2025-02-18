@@ -1,0 +1,20 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+struct ListNode* reverseList(struct ListNode* head) {
+    //I wanna do recursion by breaking each list into the head and the rest
+    if (head == NULL || head->next == NULL) {
+        return head; //base case
+    }
+
+    struct ListNode* reversedHead = reverseList(head->next); //Does the rest of the list (if any)
+
+    head->next->next = head; //connects current node to the end
+    head->next = NULL; //remove the old connection of the current node
+
+    return reversedHead; //return the last node (now first node)
+}
