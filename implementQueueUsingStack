@@ -1,0 +1,82 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct MyQueue {
+    int data;
+    struct MyQueue* next;
+} MyQueue;
+
+bool myQueueEmpty(MyQueue* obj) {
+    //moved to top since I wanted to use it in other functions
+    if (obj == NULL || obj->next == NULL) {
+        return true;
+    }
+    return false;
+}
+
+MyQueue* myQueueCreate() {
+    MyQueue* temp = (MyQueue*) malloc(sizeof(MyQueue));
+    if (temp == NULL) { //run of the mill linked list adder
+        return NULL;
+    }
+    temp->next = NULL;
+    return temp;
+}
+
+void myQueuePush(MyQueue* obj, int x) {
+    MyQueue* temp = myQueueCreate();
+    if (temp == NULL) {
+        return; //Empty Case
+    }
+    temp->data = x;
+    
+    while (obj->next != NULL) {
+        obj = obj->next;
+    }
+    obj->next = temp;
+}
+
+int myQueuePop(MyQueue* obj) {
+    if (myQueueEmpty(obj) || obj->next == NULL) {
+        return -1; //Handle empty case
+    }
+    int x = obj->next->data;
+    MyQueue* temp = obj->next; //Move header to point from second to third node
+    obj->next = obj->next->next;
+    free(temp); //Free previous second pointer
+    return x;
+}
+
+int myQueuePeek(MyQueue* obj) {
+    if (myQueueEmpty(obj) || obj->next == NULL) {
+        return -1; //Handle empty case
+    }
+    int x = obj->next->data;
+    return x;
+}
+
+void myQueueFree(MyQueue* obj) {
+    if (myQueueEmpty(obj)) {
+        return; //handle empty case
+    }
+    while (obj->next != NULL) {
+        MyQueue* temp = obj->next; //deletes all non-head nodes
+        obj->next = temp->next;
+        free(temp);
+    }
+    free(obj); //finally delete head node
+}
+
+/**
+ * Your MyQueue struct will be instantiated and called as such:
+ * MyQueue* obj = myQueueCreate();
+ * myQueuePush(obj, x);
+ 
+ * int param_2 = myQueuePop(obj);
+ 
+ * int param_3 = myQueuePeek(obj);
+ 
+ * bool param_4 = myQueueEmpty(obj);
+ 
+ * myQueueFree(obj);
+*/
