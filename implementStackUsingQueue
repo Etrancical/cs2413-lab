@@ -1,13 +1,11 @@
-
-
-
 typedef struct MyStack {
     int data;
     struct MyStack* next;
 } MyStack;
 
 bool myStackEmpty(MyStack* obj) {
-    if (obj == NULL) {
+    //moved to top since I wanted to use it in other functions
+    if (obj == NULL || obj->next == NULL) {
         return true;
     }
     return false;
@@ -15,46 +13,51 @@ bool myStackEmpty(MyStack* obj) {
 
 MyStack* myStackCreate() {
     MyStack* temp = (MyStack*) malloc(sizeof(MyStack));
-    if (temp == NULL) {
+    if (temp == NULL) { //run of the mill linked list adder
         return NULL;
     }
+    temp->next = NULL;
     return temp;
 }
 
 void myStackPush(MyStack* obj, int x) {
+    //add to head while keeping head at first place
     MyStack* temp = myStackCreate();
     if (temp != NULL) {
         temp->data = x;
-        //temp->next = NULL;
-        while (!myStackEmpty(obj) && obj->next != NULL) {
-            obj = obj->next;
-        }
+        temp->next = obj->next;
         obj->next = temp;
     }
 }
 
 int myStackPop(MyStack* obj) {
-    int x = obj->data;
-    free(obj);
+    if (myStackEmpty(obj) || obj->next == NULL) {
+        return -1; //Handle empty case
+    }
+    int x = obj->next->data;
+    MyStack* temp = obj->next; //Move header to point from second to third node
+    obj->next = obj->next->next;
+    free(temp); //Free previous second pointer
     return x;
 }
 
 int myStackTop(MyStack* obj) {
     if (obj == NULL) {
-        return -1;
+        return -1; //empty case
     }
-    while (obj->next != NULL) {
-        obj = obj->next;
-    }
-    return obj->data;
+    return obj->next->data; //return second node since first node is empty head
 }
 
 void myStackFree(MyStack* obj) {
-    while(!myStackEmpty(obj)) {
-        MyStack* temp = obj;
-        obj = obj->next;
+    if (myStackEmpty) {
+        return; //handle empty case
+    }
+    while (obj->next != NULL) {
+        MyStack* temp = obj->next; //deletes all non-head nodes
+        obj->next = temp->next;
         free(temp);
     }
+    free(obj); //finally delete head node
 }
 
 /**
