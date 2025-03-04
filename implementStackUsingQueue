@@ -1,0 +1,72 @@
+
+
+
+typedef struct MyStack {
+    int data;
+    struct MyStack* next;
+} MyStack;
+
+bool myStackEmpty(MyStack* obj) {
+    if (obj == NULL) {
+        return true;
+    }
+    return false;
+}
+
+MyStack* myStackCreate() {
+    MyStack* temp = (MyStack*) malloc(sizeof(MyStack));
+    if (temp == NULL) {
+        return NULL;
+    }
+    return temp;
+}
+
+void myStackPush(MyStack* obj, int x) {
+    MyStack* temp = myStackCreate();
+    if (temp != NULL) {
+        temp->data = x;
+        //temp->next = NULL;
+        while (!myStackEmpty(obj) && obj->next != NULL) {
+            obj = obj->next;
+        }
+        obj->next = temp;
+    }
+}
+
+int myStackPop(MyStack* obj) {
+    int x = obj->data;
+    free(obj);
+    return x;
+}
+
+int myStackTop(MyStack* obj) {
+    if (obj == NULL) {
+        return -1;
+    }
+    while (obj->next != NULL) {
+        obj = obj->next;
+    }
+    return obj->data;
+}
+
+void myStackFree(MyStack* obj) {
+    while(!myStackEmpty(obj)) {
+        MyStack* temp = obj;
+        obj = obj->next;
+        free(temp);
+    }
+}
+
+/**
+ * Your MyStack struct will be instantiated and called as such:
+ * MyStack* obj = myStackCreate();
+ * myStackPush(obj, x);
+ 
+ * int param_2 = myStackPop(obj);
+ 
+ * int param_3 = myStackTop(obj);
+ 
+ * bool param_4 = myStackEmpty(obj);
+ 
+ * myStackFree(obj);
+*/
