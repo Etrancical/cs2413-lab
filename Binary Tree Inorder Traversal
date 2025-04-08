@@ -1,0 +1,41 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* inorderTraversal(struct TreeNode* root, int* returnSize) {
+    //Base case
+    if (root == NULL) {
+        *returnSize = 0;
+        return NULL;
+    }
+
+    int temp = root->val;
+    int leftSize = 0, rightSize = 0;
+    int* left = inorderTraversal(root->left, &leftSize); //gets the left and right lists
+    int* right = inorderTraversal(root->right, &rightSize);
+
+    *returnSize = 1 + leftSize + rightSize; //updates the returnSize
+    int* list = (int*) malloc(*returnSize * sizeof(int));
+
+    if(leftSize != NULL) {
+        memcpy(list, left, leftSize * sizeof(int)); //left 1st
+    }
+
+    list[leftSize] = temp; //current 2nd
+
+    if(rightSize != NULL) {
+        memcpy(list+1+leftSize, right, rightSize * sizeof(int)); //right 3rd
+    }
+
+    free(left);
+    free(right);
+
+    return list;
+}
